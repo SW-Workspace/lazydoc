@@ -40,6 +40,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# Claude Code local config (skills, agent memory — not project source)
+.claude/
+
 # Playwright
 node_modules/
 /test-results/
