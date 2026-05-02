@@ -1,6 +1,6 @@
 export type TabId = "prompt" | "github" | "url";
 
-export interface SB_DocumentModel {
+export interface DocumentModel {
   id: string;
   account_id: string;
   content: string;

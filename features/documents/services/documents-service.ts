@@ -1,8 +1,8 @@
 import { supabaseClient } from "@/core/config/supabase";
 import { handleSupabaseQuery } from "@/core/lib/supabase-handler";
-import type { SB_DocumentModel } from "../types";
+import type { DocumentModel } from "../types";
 
-export function createDocumment(document_data: SB_DocumentModel) {
+export function createDocummentService(document_data: DocumentModel) {
   return handleSupabaseQuery(async () => {
     return await supabaseClient
       .from("documents_generated")
@@ -11,7 +11,7 @@ export function createDocumment(document_data: SB_DocumentModel) {
   });
 }
 
-export function getDocummentByAccountId(account_id: string) {
+export function getDocummentByAccountIdService(account_id: string) {
   return handleSupabaseQuery(async () => {
     return await supabaseClient
       .from("documents_generated")
@@ -20,8 +20,8 @@ export function getDocummentByAccountId(account_id: string) {
   });
 }
 
-export function updateDocumentById(
-  document_data: SB_DocumentModel,
+export function updateDocumentByIdService(
+  document_data: DocumentModel,
   document_id: string,
 ) {
   return handleSupabaseQuery(async () => {
@@ -33,11 +33,11 @@ export function updateDocumentById(
   });
 }
 
-export function deletedDocumentByID(document_id) {
+export function markDeletedDocumentByIdService(document_id: string) {
   return handleSupabaseQuery(async () => {
     return await supabaseClient
       .from("documents_generated")
-      .delete()
+      .update({ deleted: true })
       .eq("id", document_id);
   });
 }

@@ -1,11 +1,25 @@
-import { GoogleGenAI } from "@google/genai";
+import { generateReadmeService } from "@/features/documents/services/ai-service";
+import { NextResponse } from "next/server";
 
-const ai = new GoogleGenAI({});
+export async function POST(request: Request) {
+  try {
+    const { content } = (await request.json()) as { content: string };
 
-export default async function (content: string) {
-  const response = await ai.models.generateContent({
-    model: "gemini-3-flash-preview",
-    contents: `Create a README.md file for the content provided to you. Make sure to return everything in Markdown format and do not change, add, or remove anything from the content. Your task is to create a complete, easy-to-understand README.md file. ${content}`,
-  });
-  return response.text;
+    if (!content) {
+      return NextResponse.json(
+        { error: "No content provided" },
+        { status: 400 },
+      );
+    }
+
+    const readme = await generateReadmeService(content);
+    return NextResponse.json({ readme });
+  } catch (error: unknown) {
+    const err = error instanceof Error ? error.message : "Unknown Error";
+    console.error(`Error description ${err}`);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
+  }
 }
