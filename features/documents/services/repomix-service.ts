@@ -14,14 +14,12 @@ export async function processRemoteRepoPublic(repoUrl: string) {
     };
 
     const result = await runCli(["."], process.cwd(), options);
-
     const text = await fs.promises.readFile(outputFile, "utf-8");
 
-    return { text: text, result: result, uuid: uuid };
-  } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    throw new Error(`There was an error getting repository: ${message}`, {
-      cause: error,
+    return { text, result, uuid };
+  } finally {
+    await fs.promises.unlink(outputFile).catch((unlinkError: unknown) => {
+      console.warn("Could not delete temp file:", unlinkError);
     });
   }
 }
