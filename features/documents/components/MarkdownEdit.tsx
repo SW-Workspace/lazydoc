@@ -20,6 +20,8 @@ import {
   Undo,
   Redo,
 } from "lucide-react";
+import { DOMSerializer } from "prosemirror-model";
+import { defaultMarkdownParser, schema } from "prosemirror-markdown";
 
 marked.setOptions({ gfm: true, breaks: true });
 
@@ -40,19 +42,25 @@ export default function MarkdownEdit({
   const [historyIndex, setHistoryIndex] = useState(0);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // useMemo en vez de useEffect + setState para el preview
   const preview = useMemo(() => {
-    return tab === "preview" ? (marked(markdown) as string) : "";
+    if (tab !== "preview") return "";
+
+    const doc = defaultMarkdownParser.parse(markdown);
+    const serializer = DOMSerializer.fromSchema(schema);
+    const fragment = serializer.serializeFragment(doc.content);
+    const div = document.createElement("div");
+    div.appendChild(fragment);
+    return div.innerHTML;
   }, [tab, markdown]);
 
-  function handleChange(value: string) {
+  const handleChange = (value: string) => {
     setMarkdown(value);
     setHistory((prev) => [...prev.slice(0, historyIndex + 1), value]);
     setHistoryIndex((prev) => prev + 1);
     onchange?.(value);
-  }
+  };
 
-  function execCommand(cmd: string) {
+  const execCommand = (cmd: string) => {
     const ta = textareaRef.current;
     if (ta === null) return;
     const start = ta.selectionStart;
@@ -141,7 +149,7 @@ export default function MarkdownEdit({
     }
 
     ta.focus();
-  }
+  };
 
   const toolbarGroups = [
     [
@@ -175,7 +183,6 @@ export default function MarkdownEdit({
           "0 32px 80px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.07)",
       }}
     >
-      {/* glow line */}
       <div
         style={{
           height: 1,
@@ -184,7 +191,6 @@ export default function MarkdownEdit({
         }}
       />
 
-      {/* tabs + toolbar */}
       <div
         className="flex items-center justify-between px-3 gap-3 flex-wrap"
         style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}
@@ -249,7 +255,6 @@ export default function MarkdownEdit({
         ) : null}
       </div>
 
-      {/* write */}
       {tab === "write" ? (
         <textarea
           ref={textareaRef}
@@ -263,10 +268,9 @@ export default function MarkdownEdit({
         />
       ) : null}
 
-      {/* preview */}
       {tab === "preview" ? (
         <div
-          className="markdown-body min-h-[480px] p-6"
+          className="markdown-body h-[480px] overflow-y-auto p-6"
           style={{ background: "transparent" }}
           dangerouslySetInnerHTML={{ __html: preview }}
         />

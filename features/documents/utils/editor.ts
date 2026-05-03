@@ -5,7 +5,7 @@ import { baseKeymap } from "prosemirror-commands";
 import { undo, redo } from "prosemirror-history";
 import { defaultMarkdownParser } from "prosemirror-markdown";
 
-export function createState(markdown = "") {
+export const createState = (markdown = "") => {
   return EditorState.create({
     doc: defaultMarkdownParser.parse(markdown),
     plugins: [
@@ -14,4 +14,4 @@ export function createState(markdown = "") {
       keymap(baseKeymap),
     ],
   });
-}
+};
