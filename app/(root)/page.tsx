@@ -275,7 +275,7 @@ export default function RootPage() {
 
             <div className="mt-3 flex items-center justify-between gap-3">
               <div className="flex items-center gap-2">
-                <span className="text-[11px] text-[#3a3a3a] font-medium uppercase tracking-widest">Model</span>
+                <span className="text-[11px] text-[#555555] font-medium uppercase tracking-widest">Model</span>
                 <Dropdown
                   value={model}
                   onChange={setModel}
@@ -283,7 +283,7 @@ export default function RootPage() {
                 />
               </div>
               <div className="flex items-center gap-1.5">
-                {activeTab === 'prompt' ? <span className="text-[11px]" style={{ color: '#3a3a3a' }}>
+                {activeTab === 'prompt' ? <span className="text-[11px]" style={{ color: '#555555' }}>
                     {promptValue.length} chars
                   </span> : null}
               </div>
@@ -329,7 +329,7 @@ export default function RootPage() {
               </div>
               <div
                 className="text-[10px] uppercase tracking-widest"
-                style={{ color: '#3a3a3a', letterSpacing: '0.1em' }}
+                style={{ color: '#555555', letterSpacing: '0.1em' }}
               >
                 {stat.label}
               </div>

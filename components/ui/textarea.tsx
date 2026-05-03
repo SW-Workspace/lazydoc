@@ -36,7 +36,7 @@ export default function Textarea({
         id={id}
         className={cn(
           'w-full rounded-lg outline-none',
-          'bg-[#111111] text-[#f0f0f0] placeholder:text-[#3a3a3a]',
+          'bg-[#111111] text-[#f0f0f0] placeholder:text-[#555555]',
           'px-3.5 py-3 text-sm min-h-[120px] leading-relaxed',
           'transition-all duration-200',
           error

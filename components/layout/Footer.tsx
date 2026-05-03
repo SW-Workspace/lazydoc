@@ -104,7 +104,7 @@ export default function Footer() {
 
           <div className="f-col md:col-span-3 md:col-start-7">
             <h4
-              className="text-[10px] font-semibold uppercase mb-5 text-[#3a3a3a]"
+              className="text-[10px] font-semibold uppercase mb-5 text-[#555555]"
               style={{ letterSpacing: '0.1em' }}
             >
               Product
@@ -125,7 +125,7 @@ export default function Footer() {
 
           <div className="f-col md:col-span-3 md:col-start-10">
             <h4
-              className="text-[10px] font-semibold uppercase mb-5 text-[#3a3a3a]"
+              className="text-[10px] font-semibold uppercase mb-5 text-[#555555]"
               style={{ letterSpacing: '0.1em' }}
             >
               Resources
@@ -149,11 +149,11 @@ export default function Footer() {
           className="f-col mt-14 pt-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
           style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}
         >
-          <p className="text-[12px] text-[#3a3a3a]">
+          <p className="text-[12px] text-[#555555]">
             &copy; {new Date().getFullYear()} LazyDoc. All rights reserved.
           </p>
           <div className="flex items-center gap-1.5">
-            <span className="text-[12px] text-[#3a3a3a]">Made with</span>
+            <span className="text-[12px] text-[#555555]">Made with</span>
             <span
               className="text-[12px] font-medium"
               style={{
