@@ -2,7 +2,7 @@ import { runCli } from "repomix";
 import fs from "fs";
 import { randomUUID } from "crypto";
 
-export async function processRemoteRepoPublic(repoUrl: string) {
+export async function processRemoteRepoPublicService(repoUrl: string) {
   const uuid = randomUUID();
   const outputFile = `output-${uuid}.xml`;
 

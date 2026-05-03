@@ -10,6 +10,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@google/genai": "^1.51.0",
     "@gsap/react": "^2.1.2",
     "@hookform/resolvers": "^5.2.2",
     "@supabase/supabase-js": "^2.105.1",
