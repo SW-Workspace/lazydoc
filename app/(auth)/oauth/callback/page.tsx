@@ -69,7 +69,7 @@ export default function OAuthCallbackPage() {
               </svg>
             </div>
             <div>
-              <p className="text-[15px] font-semibold text-[#f0f0f0] mb-1">{"Signing you in…"}</p>
+              <p className="text-[15px] font-semibold text-[#f0f0f0] mb-1">{'Signing you in…'}</p>
               <p className="text-[13px] text-[#6b6b6b]">Finishing up your GitHub login</p>
             </div>
           </>

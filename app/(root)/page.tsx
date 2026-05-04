@@ -5,7 +5,7 @@ import Link from 'next/link';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { HelpCircle, Zap, Shield, Globe, FileText } from 'lucide-react';
-import { Button, Input, Textarea, Dropdown, Modal } from '@/components/ui';
+import { Button, Input, Textarea, Dropdown, Modal, Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui';
 import type { TabId } from '@/features/documents/types';
 import { MODELS } from '@/features/documents/constants';
 
@@ -44,6 +44,7 @@ const TABS: { id: TabId; label: string; icon: React.ReactNode; color: string; gl
 export default function RootPage() {
   const pageRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+
   const [activeTab, setActiveTab] = useState<TabId>('prompt');
   const [model, setModel] = useState('gemini-2.5-flash');
   const [promptValue, setPromptValue] = useState('');
@@ -198,111 +199,98 @@ export default function RootPage() {
             }}
           />
 
-          <div
-            className="flex"
-            style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
-          >
-            {TABS.map((tab) => {
-              const isActive = tab.id === activeTab;
-              return (
-                <button
+          <Tabs value={activeTab} onValueChange={switchTab}>
+            <TabsList>
+              {TABS.map((tab) => (
+                <TabsTrigger
                   key={tab.id}
-                  type="button"
-                  onClick={() => { switchTab(tab.id); }}
-                  className="relative flex-1 flex items-center justify-center gap-1.5 py-3.5 text-[13px] font-medium transition-all duration-200 cursor-pointer"
-                  style={{
-                    color: isActive ? tab.color : '#6b6b6b',
-                  }}
+                  value={tab.id}
+                  color={tab.color}
+                  glow={tab.glow}
                 >
+                  {tab.icon}
+                  {tab.label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+
+            <div ref={contentRef} className="p-5">
+              <TabsContent value="prompt">
+                <Textarea
+                  placeholder="Describe your project... e.g. A REST API built with Node.js for managing user authentication with JWT tokens, refresh rotation, and rate limiting."
+                  value={promptValue}
+                  onChange={(e) => { setPromptValue(e.target.value); }}
+                  className="min-h-[160px] text-[13px] leading-relaxed bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.07)] focus:border-[rgba(124,58,237,0.55)] focus:shadow-[0_0_0_3px_rgba(124,58,237,0.1),0_0_24px_rgba(124,58,237,0.07)] placeholder:text-[#2e2e45]"
+                />
+              </TabsContent>
+
+              <TabsContent value="github">
+                <div className="relative">
                   <span
-                    className="relative z-10 flex items-center gap-1.5"
-                    style={{ color: isActive ? tab.color : '#6b6b6b' }}
+                    className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+                    style={{ color: '#06b6d4' }}
                   >
-                    {tab.icon}
-                    {tab.label}
+                    <Shield size={14} />
                   </span>
-                  {isActive ? <span
-                      className="absolute bottom-0 inset-x-0 h-[2px]"
-                      style={{
-                        background: tab.color,
-                        boxShadow: `0 0 8px ${tab.glow}`,
-                      }}
-                    /> : null}
-                </button>
-              );
-            })}
-          </div>
+                  <Input
+                    placeholder="https://github.com/username/repo"
+                    value={githubValue}
+                    onChange={(e) => { setGithubValue(e.target.value); }}
+                    className="pl-10 font-mono text-[13px] bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.07)] focus:border-[rgba(6,182,212,0.55)] focus:shadow-[0_0_0_3px_rgba(6,182,212,0.1),0_0_24px_rgba(6,182,212,0.07)] placeholder:text-[#2e2e45]"
+                    inputSize="lg"
+                  />
+                </div>
+              </TabsContent>
 
-          <div ref={contentRef} className="p-5">
-            {activeTab === 'prompt' ? <Textarea
-                placeholder="Describe your project... e.g. A REST API built with Node.js for managing user authentication with JWT tokens, refresh rotation, and rate limiting."
-                value={promptValue}
-                onChange={(e) => { setPromptValue(e.target.value); }}
-                className="min-h-[160px] text-[13px] leading-relaxed bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.07)] focus:border-[rgba(124,58,237,0.55)] focus:shadow-[0_0_0_3px_rgba(124,58,237,0.1),0_0_24px_rgba(124,58,237,0.07)] placeholder:text-[#2e2e45]"
-              /> : null}
+              <TabsContent value="url">
+                <div className="relative">
+                  <span
+                    className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+                    style={{ color: '#ec4899' }}
+                  >
+                    <Globe size={15} />
+                  </span>
+                  <Input
+                    placeholder="https://example.com/my-project"
+                    value={urlValue}
+                    onChange={(e) => { setUrlValue(e.target.value); }}
+                    className="pl-10 font-mono text-[13px] bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.07)] focus:border-[rgba(236,72,153,0.55)] focus:shadow-[0_0_0_3px_rgba(236,72,153,0.1),0_0_24px_rgba(236,72,153,0.07)] placeholder:text-[#2e2e45]"
+                    inputSize="lg"
+                  />
+                </div>
+              </TabsContent>
 
-            {activeTab === 'github' ? <div className="relative">
-                <span
-                  className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
-                  style={{ color: '#06b6d4' }}
-                >
-                  <Shield size={14} />
-                </span>
-                <Input
-                  placeholder="https://github.com/username/repo"
-                  value={githubValue}
-                  onChange={(e) => { setGithubValue(e.target.value); }}
-                  className="pl-10 font-mono text-[13px] bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.07)] focus:border-[rgba(6,182,212,0.55)] focus:shadow-[0_0_0_3px_rgba(6,182,212,0.1),0_0_24px_rgba(6,182,212,0.07)] placeholder:text-[#2e2e45]"
-                  inputSize="lg"
-                />
-              </div> : null}
-
-            {activeTab === 'url' ? <div className="relative">
-                <span
-                  className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
-                  style={{ color: '#ec4899' }}
-                >
-                  <Globe size={15} />
-                </span>
-                <Input
-                  placeholder="https://example.com/my-project"
-                  value={urlValue}
-                  onChange={(e) => { setUrlValue(e.target.value); }}
-                  className="pl-10 font-mono text-[13px] bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.07)] focus:border-[rgba(236,72,153,0.55)] focus:shadow-[0_0_0_3px_rgba(236,72,153,0.1),0_0_24px_rgba(236,72,153,0.07)] placeholder:text-[#2e2e45]"
-                  inputSize="lg"
-                />
-              </div> : null}
-
-            <div className="mt-3 flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] text-[#555555] font-medium uppercase tracking-widest">Model</span>
-                <Dropdown
-                  value={model}
-                  onChange={setModel}
-                  options={MODELS}
-                />
+              <div className="mt-3 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] text-[#555555] font-medium uppercase tracking-widest">Model</span>
+                  <Dropdown
+                    value={model}
+                    onChange={setModel}
+                    options={MODELS}
+                  />
+                </div>
+                <div className="flex items-center gap-1.5">
+                  {activeTab === 'prompt' ? <span className="text-[11px]" style={{ color: '#555555' }}>
+                      {promptValue.length} chars
+                    </span> : null}
+                </div>
               </div>
-              <div className="flex items-center gap-1.5">
-                {activeTab === 'prompt' ? <span className="text-[11px]" style={{ color: '#555555' }}>
-                    {promptValue.length} chars
-                  </span> : null}
-              </div>
+
+              <Button
+                variant="primary"
+                size="lg"
+                className="mt-3 w-full"
+                style={{
+                  background: `linear-gradient(135deg, ${activeTabData.color} 0%, ${activeTabData.color}cc 100%)`,
+                  boxShadow: `0 0 24px ${activeTabData.glow}, inset 0 1px 0 rgba(255,255,255,0.14)`,
+                  border: `1px solid ${activeTabData.border}40`,
+                }}
+              >
+                <Zap size={15} />
+                Generate README
+              </Button>
             </div>
-
-            <Button
-              variant="primary"
-              size="lg"
-              className="mt-3 w-full"
-              style={{
-                background: `linear-gradient(135deg, ${activeTabData.color} 0%, ${activeTabData.color}cc 100%)`,
-                boxShadow: `0 0 24px ${activeTabData.glow}, inset 0 1px 0 rgba(255,255,255,0.14)`,
-                border: `1px solid ${activeTabData.border}40`,
-              }}
-            >
-              <Zap size={15} />
-              Generate README
-            </Button>
-          </div>
+          </Tabs>
         </div>
 
         <div

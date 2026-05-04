@@ -38,7 +38,7 @@ export async function oAuthGitHubService() {
   const { error } = await supabaseClient.auth.signInWithOAuth({
     provider: 'github',
     options: {
-      redirectTo: window.location.origin + '/auth/callback'
+      redirectTo: window.location.origin + '/oauth/callback'
     }
   });
 
@@ -48,9 +48,9 @@ export async function oAuthGitHubService() {
   }
 }
 
-export async function forgetPasswordService(userData: UserAuthCredentials) {
+export async function forgotPasswordService(userData: UserAuthCredentials) {
   const { error } = await supabaseClient.auth.resetPasswordForEmail(userData.email, {
-    redirectTo: window.location.origin + '/auth/reset-password',
+    redirectTo: window.location.origin + '/reset-password',
   });
 
   if (error) {
@@ -64,6 +64,15 @@ export async function updatePasswordService(newPassword: string) {
 
   if (error) {
     console.error('Error updating password:', error.message);
+    throw new Error(error.message);
+  }
+}
+
+export async function signOutService() {
+  const { error } = await supabaseClient.auth.signOut();
+
+  if (error) {
+    console.error('Error logging out', error.message);
     throw new Error(error.message);
   }
 }

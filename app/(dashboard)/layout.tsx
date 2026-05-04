@@ -11,6 +11,8 @@ import { supabaseClient } from '@/core/config/supabase';
 import { AuthGuard } from '@/features/auth/components/AuthGuard';
 import type { User } from '@supabase/supabase-js';
 import { getInitials, truncateEmail } from '@/features/documents/utils/utils';
+import { Dropdown } from '@/components/ui';
+import { signOutService } from '@/features/auth/services/auth-services';
 
 gsap.registerPlugin(useGSAP);
 
@@ -24,29 +26,22 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const pathname = usePathname();
 
   const [user, setUser] = useState<User | null>(null);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const sidenavRef = useRef<HTMLElement>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const displayName = user?.user_metadata?.display_name ?? user?.user_metadata?.full_name ?? null;
   const email = user?.email ?? null;
   const initials = getInitials(displayName, email);
+  const userMenuOptions = [
+    { value: 'landing', label: 'Go to landing page', icon: <ExternalLink size={13} /> },
+    { value: 'settings', label: 'Settings', icon: <Settings size={13} /> },
+    { value: 'logout', label: 'Log out', icon: <LogOut size={13} />, danger: true, separatorBefore: true },
+  ];
 
+  // TODO: Save the user in context/store/slice
   useEffect(() => {
     supabaseClient.auth.getUser().then(({ data }) => { setUser(data.user); });
   }, []);
-
-  useEffect(() => {
-    if (!dropdownOpen) return;
-    function onClickOutside(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setDropdownOpen(false);
-      }
-    }
-    document.addEventListener('mousedown', onClickOutside);
-    return () => { document.removeEventListener('mousedown', onClickOutside); };
-  }, [dropdownOpen]);
 
   useGSAP(
     () => {
@@ -63,8 +58,22 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   );
 
   async function handleSignOut() {
-    await supabaseClient.auth.signOut();
+    await signOutService();
     router.push('/login');
+  }
+
+  function handleUserMenuAction(value: string) {
+    if (value === 'landing') {
+      router.push('/');
+      return;
+    }
+    if (value === 'settings') {
+      router.push('/settings');
+      return;
+    }
+    if (value === 'logout') {
+      void handleSignOut();
+    }
   }
 
   return (
@@ -141,77 +150,47 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <div
             className="px-3 py-3 shrink-0"
             style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}
-            ref={dropdownRef}
           >
-            <div className="relative">
-              {dropdownOpen ? <div
-                  className="absolute bottom-full mb-2 left-0 right-0 rounded-xl overflow-hidden z-50"
-                  style={{
-                    background: '#0e0e1a',
-                    border: '1px solid rgba(255,255,255,0.09)',
-                    boxShadow: '0 -8px 32px rgba(0,0,0,0.7), 0 0 0 1px rgba(124,58,237,0.06)',
-                  }}
+            <Dropdown
+              value=""
+              onChange={handleUserMenuAction}
+              options={userMenuOptions}
+              className="w-full"
+              menuClassName="left-0 right-0 mb-2 min-w-0"
+              showSelectedIndicator={false}
+              showChevron={false}
+              unstyledTrigger
+              renderTrigger={({ open }) => (
+                <span
+                  className={cn(
+                    'sidenav-user-trigger w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg',
+                    'transition-all duration-200 cursor-pointer group',
+                    open
+                      ? 'bg-[rgba(124,58,237,0.1)] border border-[rgba(124,58,237,0.2)]'
+                      : 'hover:bg-[rgba(255,255,255,0.04)] border border-transparent',
+                  )}
                 >
-                  <div className="p-1">
-                    <Link
-                      href="/"
-                      onClick={() => { setDropdownOpen(false); }}
-                      className="flex items-center gap-2.5 w-full px-3 py-2.5 rounded-lg text-[12.5px] text-[#a0a0a0] hover:text-[#f0f0f0] hover:bg-[rgba(255,255,255,0.05)] transition-all duration-150"
-                    >
-                      <ExternalLink size={13} className="text-[#6b6b6b]" />
-                      Go to landing page
-                    </Link>
-                    <Link
-                      href="/settings"
-                      onClick={() => { setDropdownOpen(false); }}
-                      className="flex items-center gap-2.5 w-full px-3 py-2.5 rounded-lg text-[12.5px] text-[#a0a0a0] hover:text-[#f0f0f0] hover:bg-[rgba(255,255,255,0.05)] transition-all duration-150"
-                    >
-                      <Settings size={13} className="text-[#6b6b6b]" />
-                      Settings
-                    </Link>
-                    <div className="my-1 mx-2 h-px" style={{ background: 'rgba(255,255,255,0.05)' }} />
-                    <button
-                      type="button"
-                      onClick={handleSignOut}
-                      className="flex items-center gap-2.5 w-full px-3 py-2.5 rounded-lg text-[12.5px] text-[#f87171] hover:bg-[rgba(248,113,113,0.08)] transition-all duration-150 cursor-pointer"
-                    >
-                      <LogOut size={13} />
-                      Log out
-                    </button>
-                  </div>
-                </div> : null}
-
-              <button
-                type="button"
-                onClick={() => { setDropdownOpen((v) => !v); }}
-                className={cn(
-                  'sidenav-user-trigger w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg',
-                  'transition-all duration-200 cursor-pointer group',
-                  dropdownOpen
-                    ? 'bg-[rgba(124,58,237,0.1)] border border-[rgba(124,58,237,0.2)]'
-                    : 'hover:bg-[rgba(255,255,255,0.04)] border border-transparent',
-                )}
-              >
-                <div
-                  className="shrink-0 flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-bold text-white"
-                  style={{ background: 'linear-gradient(135deg, #7c3aed 0%, #06b6d4 100%)' }}
-                >
-                  {initials}
-                </div>
-                <div className="flex-1 min-w-0 text-left">
-                  <p className="text-[12px] font-medium text-[#d0d0d0] truncate leading-tight">
-                    {displayName ?? truncateEmail(email, 16)}
-                  </p>
-                  {displayName ? <p className="text-[11px] text-[#4a4a4a] truncate leading-tight mt-0.5">
-                      {truncateEmail(email)}
-                    </p> : null}
-                </div>
-                <ChevronRight
-                  size={13}
-                  className={cn('shrink-0 transition-all duration-200', dropdownOpen ? 'text-[#7c3aed] rotate-90' : 'text-[#555555] group-hover:text-[#6b6b6b]')}
-                />
-              </button>
-            </div>
+                  <span
+                    className="shrink-0 flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-bold text-white"
+                    style={{ background: 'linear-gradient(135deg, #7c3aed 0%, #06b6d4 100%)' }}
+                  >
+                    {initials}
+                  </span>
+                  <span className="flex-1 min-w-0 text-left">
+                    <span className="block text-[12px] font-medium text-[#d0d0d0] truncate leading-tight">
+                      {displayName ?? truncateEmail(email, 16)}
+                    </span>
+                    {displayName ? <span className="block text-[11px] text-[#4a4a4a] truncate leading-tight mt-0.5">
+                        {truncateEmail(email)}
+                      </span> : null}
+                  </span>
+                  <ChevronRight
+                    size={13}
+                    className={cn('shrink-0 transition-all duration-200', open ? 'text-[#7c3aed] rotate-90' : 'text-[#555555] group-hover:text-[#6b6b6b]')}
+                  />
+                </span>
+              )}
+            />
           </div>
         </nav>
 

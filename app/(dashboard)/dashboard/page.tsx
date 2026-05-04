@@ -117,7 +117,7 @@ export default function DashboardPage() {
                       <p className="text-[13px] font-semibold text-[#e0e0e0] leading-tight truncate" title={title}>
                         {title}
                       </p>
-                      <p className="text-[11px] text-[#555555] mt-0.5">{formatDate(doc.created_at ?? '')}</p>
+                      <p className="text-[11px] text-[#555555] mt-0.5">{formatDate(doc.created_at ?? new Date().toISOString())}</p>
                     </div>
                   </div>
 

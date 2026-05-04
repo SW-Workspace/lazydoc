@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { forgotPasswordSchema, type ForgotPasswordFormData } from '../validation';
-import { forgetPasswordService } from '../services/auth-services';
+import { forgotPasswordService } from '../services/auth-services';
 
 export function useForgotPasswordForm() {
   const [serverError, setServerError] = useState<string | null>(null);
@@ -18,7 +18,7 @@ export function useForgotPasswordForm() {
   async function onSubmit(data: ForgotPasswordFormData) {
     setServerError(null);
     try {
-      await forgetPasswordService({ email: data.email });
+      await forgotPasswordService({ email: data.email });
       setSuccess(true);
     } catch (err) {
       setServerError(err instanceof Error ? err.message : 'Something went wrong');

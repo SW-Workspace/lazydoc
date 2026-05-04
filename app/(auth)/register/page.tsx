@@ -7,6 +7,7 @@ import { useGSAP } from '@gsap/react';
 import { Input, Button } from '@/components/ui';
 import { cn } from '@/core/utils/utils';
 import { useRegisterForm } from '@/features/auth/hooks/useRegisterForm';
+import { FileText } from 'lucide-react';
 
 gsap.registerPlugin(useGSAP);
 
@@ -44,11 +45,7 @@ export default function RegisterPage() {
               boxShadow: '0 0 20px rgba(124,58,237,0.5), inset 0 1px 0 rgba(255,255,255,0.18)',
             }}
           >
-            <svg className="h-4 w-4 text-white relative z-10" fill="none" viewBox="0 0 16 16">
-              <path d="M3 2h7l3 3v9H3V2z" stroke="currentColor" strokeWidth="1.25" strokeLinejoin="round" />
-              <path d="M10 2v3h3" stroke="currentColor" strokeWidth="1.25" strokeLinejoin="round" />
-              <path d="M5.5 7.5h5M5.5 10h3.5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" />
-            </svg>
+            <FileText size={16} />
           </div>
           <span
             className="font-semibold text-[15px]"
