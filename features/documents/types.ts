@@ -8,3 +8,16 @@ export interface DocumentModel {
   created_at?: string;
   updated_at?: string;
 }
+
+export interface WrapSyntax {
+  type: "wrap";
+  before: string;
+  after: string;
+}
+
+export interface LineSyntax {
+  type: "line";
+  prefix: string;
+}
+
+export type Syntax = WrapSyntax | LineSyntax;
