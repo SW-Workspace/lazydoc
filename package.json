@@ -13,8 +13,6 @@
     "@google/genai": "^1.51.0",
     "@gsap/react": "^2.1.2",
     "@hookform/resolvers": "^5.2.2",
-    "@lexical/link": "^0.44.0",
-    "@lexical/list": "^0.44.0",
     "@supabase/supabase-js": "^2.105.1",
     "babel-plugin-react-compiler": "^1.0.0",
     "github-markdown-css": "^5.9.0",

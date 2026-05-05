@@ -1,6 +1,7 @@
 import { useRef, useCallback } from "react";
 import Toolbar from "./Toolbar";
 import { useMarkdownShortcuts } from "../hooks/Usemarkdownshortcuts";
+import { cn } from "@/core/utils/utils";
 
 interface Props {
   namespace: string;
@@ -42,7 +43,7 @@ export default function Editor({ placeholder, value, onChange }: Props) {
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
         spellCheck={false}
-        className={[
+        className={cn(
           "relative w-full min-h-[320px] h-[calc(520px-41px)]",
           "rounded-b-2xl resize-none overflow-y-auto",
           "px-6 py-5 text-[14px] leading-relaxed",
@@ -50,7 +51,7 @@ export default function Editor({ placeholder, value, onChange }: Props) {
           "outline-none caret-[#7c3aed]",
           "font-mono",
           "placeholder:text-[#3a3a3a]",
-        ].join(" ")}
+        )}
       />
     </div>
   );
