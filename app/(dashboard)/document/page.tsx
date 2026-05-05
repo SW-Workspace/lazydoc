@@ -1,6 +1,6 @@
 "use client";
 
-import MarkdownEdit from "@/features/documents/components/MarkdownEdit";
+import EditorWrapper from "@/features/documents/components/EditorWrapper";
 
 export default function Page() {
   return (
@@ -102,12 +102,7 @@ export default function Page() {
           Write in markdown. Ship in seconds.
         </p>
 
-        <MarkdownEdit
-          initialMarkdown="# My Project\n\nDescribe your project here."
-          onchange={(md) => {
-            console.log(md);
-          }}
-        />
+        <EditorWrapper />
       </div>
     </div>
   );
