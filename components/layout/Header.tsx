@@ -6,16 +6,27 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { cn } from '@/core/utils/utils';
 import { NAV_LINKS } from '@/features/documents/constants';
+import type { Session } from '@supabase/supabase-js';
+import { getSessionService } from '@/features/auth/services/auth-services';
 
 gsap.registerPlugin(useGSAP);
 
 export default function Header() {
-  const headerRef = useRef<HTMLElement>(null);
+  const [session, setSession] = useState<Session | null>(null);
+
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const headerRef = useRef<HTMLElement>(null);
   const bar1Ref = useRef<HTMLSpanElement>(null);
   const bar2Ref = useRef<HTMLSpanElement>(null);
   const bar3Ref = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+   getSessionService()
+      .then((session) => { setSession(session); })
+      .catch((error) => { console.error('Something went wrong:', error); }); 
+  }, [session]);
 
   useEffect(() => {
     const onScroll = () => { setScrolled(window.scrollY > 24); };
@@ -105,34 +116,44 @@ export default function Header() {
           </nav>
 
           <div className="h-cta hidden md:flex items-center gap-2">
-            <Link
-              href="/login"
-              className="px-4 py-1.5 text-[13px] text-[#a0a0a0] hover:text-[#f0f0f0] transition-colors duration-200 rounded-lg hover:bg-[rgba(255,255,255,0.05)]"
-            >
-              Sign in
-            </Link>
-            <Link
-              href="/register"
-              className="group relative inline-flex h-8 items-center gap-1.5 rounded-lg px-4 text-[13px] font-medium text-[#f0f0f0] overflow-hidden"
-              style={{
-                background: 'linear-gradient(135deg, #7c3aed 0%, #06b6d4 100%)',
-                boxShadow: '0 0 20px rgba(124,58,237,0.3), 0 0 40px rgba(6,182,212,0.1), inset 0 1px 0 rgba(255,255,255,0.15)',
-                border: '1px solid rgba(255,255,255,0.1)',
-              }}
-            >
-              <span className="relative z-10">Get started</span>
-              <svg
-                className="h-3 w-3 relative z-10 transition-transform duration-200 group-hover:translate-x-0.5"
-                fill="none"
-                viewBox="0 0 12 12"
+            {session ? <Link
+                href="/login"
+                className="px-4 py-1.5 text-[13px] text-[#a0a0a0] hover:text-[#f0f0f0] transition-colors duration-200 rounded-lg hover:bg-[rgba(255,255,255,0.05)]"
               >
-                <path d="M2.5 6h7M6.5 3.5L9 6l-2.5 2.5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              <span
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                style={{ background: 'linear-gradient(135deg, #8b47ff 0%, #0ea5e9 100%)' }}
-              />
-            </Link>
+                Go to dashboard
+              </Link> : (
+              <>
+
+                  <Link
+                    href="/login"
+                    className="px-4 py-1.5 text-[13px] text-[#a0a0a0] hover:text-[#f0f0f0] transition-colors duration-200 rounded-lg hover:bg-[rgba(255,255,255,0.05)]"
+                  >
+                    Sign in
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="group relative inline-flex h-8 items-center gap-1.5 rounded-lg px-4 text-[13px] font-medium text-[#f0f0f0] overflow-hidden"
+                    style={{
+                      background: 'linear-gradient(135deg, #7c3aed 0%, #06b6d4 100%)',
+                      boxShadow: '0 0 20px rgba(124,58,237,0.3), 0 0 40px rgba(6,182,212,0.1), inset 0 1px 0 rgba(255,255,255,0.15)',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                    }}
+                  >
+                    <span className="relative z-10">Get started</span>
+                    <svg
+                      className="h-3 w-3 relative z-10 transition-transform duration-200 group-hover:translate-x-0.5"
+                      fill="none"
+                      viewBox="0 0 12 12"
+                    >
+                      <path d="M2.5 6h7M6.5 3.5L9 6l-2.5 2.5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    <span
+                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      style={{ background: 'linear-gradient(135deg, #8b47ff 0%, #0ea5e9 100%)' }}
+                    />
+                  </Link>
+                </>
+              )}
           </div>
 
           <button

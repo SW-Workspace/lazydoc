@@ -1,5 +1,6 @@
 import { supabaseClient } from '@/core/config/supabase';
 import type { UserAuthCredentials } from '../types';
+import type { Session } from '@supabase/supabase-js';
 
 export async function signUpService(userData: UserAuthCredentials) {
   const { data, error } = await supabaseClient.auth.signUp({
@@ -75,4 +76,15 @@ export async function signOutService() {
     console.error('Error logging out', error.message);
     throw new Error(error.message);
   }
+}
+
+export async function getSessionService(): Promise<Session | null> {
+  const { data: { session }, error } = await supabaseClient.auth.getSession();
+
+  if (error) {
+    console.error('Error retrieving session:', error.message);
+    throw new Error(error.message);
+  }
+
+  return session;
 }
