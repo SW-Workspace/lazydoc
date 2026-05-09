@@ -4,7 +4,15 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   experimental: {
     turbopackFileSystemCacheForDev: true,
-  }, 
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+      },
+    ],
+  },
 };
 
 export default nextConfig;
