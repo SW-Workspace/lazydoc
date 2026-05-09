@@ -25,3 +25,15 @@ export interface ActivityItem {
   description: string;
   timestamp: string;
 }
+export interface WrapSyntax {
+  type: "wrap";
+  before: string;
+  after: string;
+}
+
+export interface LineSyntax {
+  type: "line";
+  prefix: string;
+}
+
+export type Syntax = WrapSyntax | LineSyntax;
