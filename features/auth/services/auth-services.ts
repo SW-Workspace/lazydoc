@@ -76,3 +76,35 @@ export async function signOutService() {
     throw new Error(error.message);
   }
 }
+
+export const changePasswordService = async (
+  oldPassword: string,
+  newPassword: string,
+) => {
+  const { data, error } = await supabaseClient.auth.updateUser({
+    password: newPassword,
+    currentPassword: oldPassword,
+  });
+
+  if (error) {
+    throw new Error(
+      `There was an error updating the password: ${error.message}`,
+    );
+  }
+
+  return { success: true, user: data.user };
+};
+
+export const changeUserNameService = async (newUserName: string) => {
+  const { data, error } = await supabaseClient.auth.updateUser({
+    data: { full_name: newUserName },
+  });
+
+  if (error)
+    throw new Error(
+      `There was an error updating the userName: ${error.message}`,
+    );
+
+  return { success: true, user: data.user };
+};
+
