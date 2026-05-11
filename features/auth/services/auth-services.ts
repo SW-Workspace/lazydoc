@@ -77,10 +77,10 @@ export async function signOutService() {
   }
 }
 
-export const changePasswordService = async (
+export async function changePasswordService(
   oldPassword: string,
   newPassword: string,
-) => {
+) {
   const { data, error } = await supabaseClient.auth.updateUser({
     password: newPassword,
     currentPassword: oldPassword,
@@ -95,7 +95,7 @@ export const changePasswordService = async (
   return { success: true, user: data.user };
 };
 
-export const changeUserNameService = async (newUserName: string) => {
+export async function changeUserNameService(newUserName: string){
   const { data, error } = await supabaseClient.auth.updateUser({
     data: { full_name: newUserName },
   });
