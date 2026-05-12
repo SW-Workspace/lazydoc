@@ -2,7 +2,9 @@ import { supabaseClient } from '@/core/config/supabase';
 import { handleSupabaseQuery } from '@/core/lib/supabase-handler';
 import type { DocumentModel } from '../types';
 
-export function createDocummentService(document_data: DocumentModel) {
+export function createDocummentService(
+  document_data: DocumentModel,
+): Promise<DocumentModel[] | null> {
   return handleSupabaseQuery(
     async () =>
       await supabaseClient
@@ -12,7 +14,9 @@ export function createDocummentService(document_data: DocumentModel) {
   );
 }
 
-export function getDocummentByAccountIdService(account_id: string) {
+export function getDocummentByAccountIdService(
+  account_id: string,
+): Promise<DocumentModel[] | null> {
   return handleSupabaseQuery(
     async () =>
       await supabaseClient
@@ -25,7 +29,7 @@ export function getDocummentByAccountIdService(account_id: string) {
 export function updateDocumentByIdService(
   document_data: DocumentModel,
   document_id: string,
-) {
+): Promise<DocumentModel[] | null> {
   return handleSupabaseQuery(
     async () =>
       await supabaseClient
@@ -36,7 +40,9 @@ export function updateDocumentByIdService(
   );
 }
 
-export function markDeletedDocumentByIdService(document_id: string) {
+export function markDeletedDocumentByIdService(
+  document_id: string,
+): Promise<DocumentModel[] | null> {
   return handleSupabaseQuery(
     async () =>
       await supabaseClient
