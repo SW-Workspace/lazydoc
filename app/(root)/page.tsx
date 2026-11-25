@@ -8,6 +8,7 @@ import { HelpCircle, Zap, Shield, Globe, FileText } from 'lucide-react';
 import { Button, Input, Textarea, Dropdown, Modal, Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui';
 import type { TabId } from '@/features/documents/types';
 import { MODELS } from '@/features/documents/constants';
+import Image from 'next/image';
 
 gsap.registerPlugin(useGSAP);
 
@@ -377,6 +378,11 @@ export default function RootPage() {
             Built for lazy developers, by lazy developers.
           </p>
         </div>
+        <Image 
+          src="https://media.discordapp.net/attachments/1383835576201121925/1498395315051561020/image.png?ex=69ff8161&is=69fe2fe1&hm=a12039e608c38d39d7edc379269220162b52aecc286b0d63419c14158d81028c&animated=true" 
+          className="rounded-md"
+          alt="us"
+        />
         <div className="mt-5 pt-4" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
           <Link href="/register">
             <Button variant="primary" size="md" className="w-full">

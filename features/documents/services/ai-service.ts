@@ -1,6 +1,6 @@
 import { ai } from "@/core/config/ai";
 
-export async function generateReadmeService(content: string) {
+export const generateReadmeService = async (content: string) => {
   const response = await ai.models.generateContent({
     model: "gemini-3-flash-preview",
     contents: [
@@ -26,4 +26,4 @@ export async function generateReadmeService(content: string) {
   });
 
   return response.text;
-}
+};
